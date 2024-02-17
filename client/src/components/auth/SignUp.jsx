@@ -13,11 +13,11 @@ const SignUp = () => {
   const toast = useToast();
   const navigate = useNavigate();
 
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [password, setPassword] = useState();
-  const [pic, setPic] = useState();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [password, setPassword] = useState("");
+  const [pic, setPic] = useState("");
   const [picLoading, setPicLoading] = useState(false);
 
   const submitHandler = async () => {
@@ -60,7 +60,7 @@ const SignUp = () => {
         },
         config
       );
-      console.log(data);
+      console.log("data", data);
       toast({
         title: "Registration Successful",
         status: "success",
@@ -73,7 +73,7 @@ const SignUp = () => {
       navigate("/chats");
     } catch (error) {
       toast({
-        title: "Error Occurred!",
+        title: "Error Occurred in Registration !",
         description: error.response.data.message,
         status: "error",
         duration: 5000,
@@ -86,7 +86,7 @@ const SignUp = () => {
 
   const postDetails = async (pics) => {
     setPicLoading(true);
-    if (pics === undefined) {
+    if (pics === null) {
       toast({
         title: "Please Select an Image!",
         status: "warning",
@@ -103,11 +103,8 @@ const SignUp = () => {
       data.append("upload_preset", "chat-app");
       data.append("cloud_name", "djalwkbjf");
       try {
-        const response = await fetch(import.meta.env.VITE_CLOUDINARY_URL, {
-          method: "post",
-          body: data,
-        });
-        const picData = await response.json();
+        const response = await axios.post(import.meta.env.VITE_CLOUDINARY_URL, data);
+        const picData = response.data;
         setPic(picData.url.toString());
         console.log(picData.url.toString());
         setPicLoading(false);
@@ -160,7 +157,7 @@ const SignUp = () => {
           </InputRightElement>
         </InputGroup>
       </FormControl>
-      <FormControl id="password" isRequired>
+      <FormControl id="confirm-password" isRequired>
         <FormLabel>Confirm Password</FormLabel>
         <InputGroup size="md">
           <Input

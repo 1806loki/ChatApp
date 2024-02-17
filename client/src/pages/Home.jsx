@@ -9,9 +9,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
-import SignUp from "../components/auth/SignUp";
-import Login from "../components/auth/Login";
+ import SignUp from "./../components/auth/SignUp";
+import { useNavigate } from "react-router-dom";
+import Login from './../components/auth/Login';
 
 function Homepage() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function Homepage() {
   return (
     <Container maxW="xl" centerContent>
       <Box
-        d="flex"
+        display="flex"
         justifyContent="center"
         p={3}
         bg="white"
