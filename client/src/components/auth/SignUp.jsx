@@ -24,7 +24,7 @@ const SignUp = () => {
     setPicLoading(true);
     if (!name || !email || !password || !confirmPassword) {
       toast({
-        title: "Please Fill all the Feilds",
+        title: "Please Fill all the Fields",
         status: "warning",
         duration: 5000,
         isClosable: true,
@@ -51,7 +51,7 @@ const SignUp = () => {
         },
       };
       const { data } = await axios.post(
-        "/api/user",
+        "http://localhost:3000/api/user",
         {
           name,
           email,
@@ -84,7 +84,7 @@ const SignUp = () => {
     }
   };
 
-  const postDetails = (pics) => {
+  const postDetails = async (pics) => {
     setPicLoading(true);
     if (pics === undefined) {
       toast({
@@ -101,21 +101,20 @@ const SignUp = () => {
       const data = new FormData();
       data.append("file", pics);
       data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "piyush proj");
-      fetch("https://api.cloudinary.com/v1_1/piyushproj/image/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setPic(data.url.toString());
-          console.log(data.url.toString());
-          setPicLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setPicLoading(false);
+      data.append("cloud_name", "djalwkbjf");
+      try {
+        const response = await fetch(import.meta.env.VITE_CLOUDINARY_URL, {
+          method: "post",
+          body: data,
         });
+        const picData = await response.json();
+        setPic(picData.url.toString());
+        console.log(picData.url.toString());
+        setPicLoading(false);
+      } catch (err) {
+        console.log(err);
+        setPicLoading(false);
+      }
     } else {
       toast({
         title: "Please Select an Image!",

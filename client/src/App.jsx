@@ -1,24 +1,17 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "./pages/Home";
-import Chat from "./pages/Chat";
 import "./App.css";
-const App = () => {
-  const router = createBrowserRouter([
-    {
-      path: "/",
-      element: <Home />,
-    },
-    {
-      path: "chat",
-      element: <Chat />,
-    },
-  ]);
-
+import Homepage from "./pages/Home";
+import Chat from "./pages/Chat";
+import { Routes, Route } from "react-router-dom";
+ 
+function App() {
   return (
     <div className="App">
-      <RouterProvider router={router} />
+      <Routes>
+        <Route path="/" element={<Homepage />} exact />
+        <Route path="/chats" element={<Chat />} />
+       </Routes>
     </div>
   );
-};
+}
 
 export default App;
