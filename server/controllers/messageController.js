@@ -16,32 +16,37 @@ const allMessages = async (req, res) => {
 const sendMessage = async (req, res) => {
   const { content, chatId } = req.body;
 
-  if (!content || !chatId) {
-    return res.status(400).json({ error: "Invalid data passed into request" });
-  }
+  
 
   try {
+    if (!content || !chatId) {
+      return res
+        .status(400)
+        .json({ error: "Invalid data passed into request" });
+    }
+
     const newMessage = {
       sender: req.user._id,
       content: content,
       chat: chatId._id,
     };
 
-    let message = await Message.create(newMessage)
-      .populate("sender", "name pic")
-      .populate("chat")
-      .execPopulate();
+    let message = await Message.create(newMessage);
+    message = await message.populate("sender", "name pic");
+    message = await message.populate("chat");
 
-    await User.populate(message, {
-      path: "chat.users",
-      select: "name pic email",
+    const updatedChat = await Chat.findByIdAndUpdate(chatId, {
+      latestMessage: message,
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId._Id, { latestMessage: message });
+    if (!updatedChat) {
+      return res.status(404).json({ error: "Chat not found" });
+    }
 
-    res.json(message);
+    return res.json(message);
   } catch (error) {
-    res.status(500).json({ error: "Failed to send message" });
+    console.error(error);
+    return res.status(500).json({ error: "Failed to send message" });
   }
 };
 

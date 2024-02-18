@@ -72,7 +72,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         position: "bottom",
       });
     }
-    setLoading(false)
+    setLoading(false);
   };
 
   const sendMessage = async (event) => {
@@ -90,13 +90,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           "http://localhost:3000/api/message",
           {
             content: newMessage,
-            chatId: selectedChat ,
+            chatId: selectedChat,
           },
           config
         );
 
         socket.emit("new message", data);
-        setMessages([...messages, data]);
+        setMessages(prevMessages => [...prevMessages, data]);
       } catch (error) {
         toast({
           title: "Error Occurred!",
@@ -135,10 +135,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setFetchAgain(!fetchAgain);
         }
       } else {
-        setMessages([...messages, newMessageReceived]);
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
     });
-  });
+
+    return () => {
+      socket.off("message received");
+    };
+  }, [fetchAgain]);
 
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
@@ -269,5 +273,3 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 };
 
 export default SingleChat;
-
-
